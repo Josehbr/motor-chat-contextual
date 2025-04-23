@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # MySQL Database Service
+  db:
+    image: mysql:8.0 
+    container_name: motor-chat-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} 
+      MYSQL_DATABASE: ${MYSQL_DB}                 
+      MYSQL_USER: ${MYSQL_USER}                   
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}           
+    volumes:
+      - mysql_data:/var/lib/mysql 
+    ports:
+      - "3306:3306" 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis Cache Service
+  cache:
+    image: redis:7-alpine 
+    container_name: motor-chat-cache
+    volumes:
+      - redis_data:/data 
+    ports:
+      - "6379:6379" 
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
+  chroma_data:

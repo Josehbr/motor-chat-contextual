@@ -1,0 +1,8 @@
+flask
+langchain
+langchain-openai
+chromadb
+mysql-connector-python
+redis
+gunicorn
+python-dotenv
